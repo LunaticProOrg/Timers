@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Manager : MonoBehaviour
+public class SaveLoadManager
 {
     private const string saveKey = "saveKey";
 
@@ -13,7 +13,7 @@ public class Manager : MonoBehaviour
     public void Load()
     {
         _data = SaveExtension.Override(saveKey, new PlayerData());
-        _data.timers ??= new Dictionary<int, int>();
+        _data.timers ??= new Dictionary<int, double>();
     }
 
     public void Save()

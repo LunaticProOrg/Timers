@@ -1,130 +1,61 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 using System.Threading.Tasks;
 using System.Threading;
 
-public delegate void OnEndTicking();
-
-public class Timer : ITickable
+namespace Lunatic.Timer
 {
-    protected int seconds { get; private set; }
-    protected IViewable viewable { get; private set; }
-
-    protected int currentSeconds;
-
-    protected string currentTime;
-
-    public event OnEndTicking EndTicking;
-
-    public int GetCurrentTimeLeft => seconds - currentSeconds;
-
-    private bool _isRunning;
-
-
-    CancellationToken token;
-
-    public Timer(IViewable viewable, int seconds, CancellationToken token)
+    public class Timer : ITickable
     {
-        currentTime = string.Empty;
-        currentSeconds = 0;
-        _isRunning = false;
-        this.viewable = viewable;
-        this.seconds = seconds;
-        this.token = token;
+        private TimeSpan _defaultTime;
 
-        AddTimeToQueue(seconds);
-        Tick();
-    }
 
-    public void SetViewable(IViewable viewable)
-    {
-        this.viewable = viewable;
+        protected TimeSpan _currentTime;
 
-        currentTime = string.Empty;
+        public event OnFinish OnTimerEnd;
 
-        AddTimeToQueue(seconds - currentSeconds);
-        Tick();
-    }
-
-    public void StartTimer()
-    {
-        if(!token.IsCancellationRequested && !IsTimerTick())
-            CreateTimer(token);
-    }
-
-    private async void CreateTimer(CancellationToken token)
-    {
-        _isRunning = true;
-
-        try
+        public Timer(TimeSpan defaultTime)
         {
-            while(currentSeconds < seconds && !token.IsCancellationRequested)
+            _defaultTime = defaultTime;
+        }
+
+        public async void Run(CancellationToken token)
+        {
+            var millisecond = TimeSpan.FromMilliseconds(100);
+
+            try
             {
-                var overrideCurrentTimeScale = 1f / Time.timeScale;
+                while(_currentTime.TotalMilliseconds < _defaultTime.TotalMilliseconds && !token.IsCancellationRequested)
+                {
+                    await Task.Delay(millisecond, token);
 
-                await Task.Delay(Mathf.RoundToInt(1000f * overrideCurrentTimeScale), token);
+                    _currentTime = _currentTime.Add(millisecond);
+                }
 
-                currentSeconds++;
-
-                var time = seconds - currentSeconds;
-
-                AddTimeToQueue(time);
+                OnTimerEnd?.Invoke();
             }
-
-            EndTicking?.Invoke();
-
-
-            currentTime = string.Empty;
-
-            AddTimeToQueue(0);
-            Tick();
-
-            _isRunning = false;
-
+            catch(Exception e)
+            {
+                Debug.Log(e);
+            }
         }
-        catch(Exception ex)
+
+        public void AddTicks(TimeSpan value)
         {
-            Debug.Log(ex);
+            _defaultTime = _defaultTime.Add(value);
         }
-    }
 
-    private void AddTimeToQueue(int time)
-    {
-        if(time < 0) time = 0;
+        public void SubtructTicks(TimeSpan value)
+        {
+            _defaultTime = _defaultTime.Subtract(value);
 
-        var t = TimeSpan.FromSeconds(time);
-        currentTime = string.Format("{0:D2}:{1:D2}:{2:D2}", t.Hours, t.Minutes, t.Seconds);
-    }
+            if(_defaultTime.TotalMilliseconds < TimeSpan.Zero.TotalMilliseconds)
+                _defaultTime = TimeSpan.Zero;
+        }
 
-    public void Tick()
-    {
-        if(currentTime != string.Empty)
-            viewable?.Viewing(currentTime);
-    }
-
-    public void AddTicks(int value)
-    {
-        currentTime = string.Empty;
-
-        seconds += value;
-
-        AddTimeToQueue(seconds - currentSeconds);
-        Tick();
-    }
-
-    public void SubtructTicks(int value)
-    {
-        currentTime = string.Empty;
-
-        seconds -= value;
-        seconds = Mathf.Clamp(seconds, 0, int.MaxValue);
-
-        AddTimeToQueue(seconds - currentSeconds);
-        Tick();
-    }
-
-    public bool IsTimerTick()
-    {
-        return _isRunning;
+        public TimeSpan GetTimeLeft()
+        {
+            return _defaultTime - _currentTime;
+        }
     }
 }

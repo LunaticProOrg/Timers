@@ -1,23 +1,21 @@
-﻿using System;
+using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
+using UnityEngine;
 
-public interface ITickable
+namespace Lunatic.Timer
 {
-    void SetViewable(IViewable viewable);
+    public delegate void OnFinish();
 
-    bool IsTimerTick();
+    public interface ITickable
+    {
+        void Run(CancellationToken token);
+        void AddTicks(TimeSpan value);
+        void SubtructTicks(TimeSpan value);
 
-    void StartTimer();
-    void Tick();
+        TimeSpan GetTimeLeft();
 
-    void AddTicks(int seconds);
-
-    void SubtructTicks(int seconds);
-
-    int GetCurrentTimeLeft { get; }
-
-    event OnEndTicking EndTicking;
+        event OnFinish OnTimerEnd;
+    }
 }

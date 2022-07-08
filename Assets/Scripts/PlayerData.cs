@@ -4,10 +4,9 @@ using System.Collections.Generic;
 [Serializable]
 public class PlayerData
 {
-    public int buttonsCount;
-    public Dictionary<int, int> timers;
+    public Dictionary<int, double> timers;
 
-    public int? this[int index]
+    public double? this[int index]
     {
         get
         {
