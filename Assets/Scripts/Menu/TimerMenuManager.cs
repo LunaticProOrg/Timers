@@ -86,9 +86,8 @@ namespace Lunatic.Timer
 
         private void InitializeTimer(PlayerData data, TimerSettings settings, int index)
         {
-            if(data.timers.ContainsKey(index)) return;
-
-            data.timers.Add(index, settings.DefaultTimerInSeconds);
+            if(data[index] == null)
+                data.timers.Add(index, settings.DefaultTimerInSeconds);
         }
 
         private IEnumerator Animate(bool FadeIn, float before, float between, float fly)

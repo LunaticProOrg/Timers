@@ -53,7 +53,11 @@ namespace Lunatic.Timer
         {
             if(!_tickables.ContainsKey(index))
             {
-                var timer = new Timer(TimeSpan.FromSeconds(_defaultSettings.DefaultTimerInSeconds));
+                var span = _dataManager.Data[index] == null
+                    ? TimeSpan.FromSeconds(_defaultSettings.DefaultTimerInSeconds)
+                    : TimeSpan.FromMilliseconds(_dataManager.Data[index].Value);
+
+                var timer = new Timer(span);
                 _tickables.Add(index, timer);
             }
         }
