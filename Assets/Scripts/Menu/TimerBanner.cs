@@ -81,7 +81,7 @@ namespace Lunatic.Timer
             _addTime_Btn.onClick.AddListener(() => tickable.AddTicks(TimeSpan.FromSeconds(_settings.TimerSecondsChangesValue)));
 
             _subtractTime_Btn.onClick.RemoveAllListeners();
-            _subtractTime_Btn.onClick.AddListener(() => tickable.AddTicks(TimeSpan.FromSeconds(_settings.TimerSecondsChangesValue)));
+            _subtractTime_Btn.onClick.AddListener(() => tickable.SubtructTicks(TimeSpan.FromSeconds(_settings.TimerSecondsChangesValue)));
 
             _startTimer_Btn.onClick.RemoveAllListeners();
             _startTimer_Btn.onClick.AddListener(() =>

@@ -12,13 +12,14 @@ namespace Lunatic.Timer
         private readonly float _baseDuration;
         private readonly float _speed;
 
-        private bool _stayingInIncremental = true;
+        private bool _stayingInIncremental;
 
         private float _elapsed;
         private float _currentDuration;
 
         public LinearSmoothValueIncremental(float baseDuration, float speed)
         {
+            _stayingInIncremental = false;
             _baseDuration = baseDuration;
             _speed = speed;
         }
@@ -33,6 +34,7 @@ namespace Lunatic.Timer
         public void OnIncrementalExit()
         {
             _stayingInIncremental = false;
+            _currentDuration = _baseDuration;
             _elapsed = 0f;
         }
 
@@ -47,7 +49,7 @@ namespace Lunatic.Timer
             else
             {
                 _elapsed = 0f;
-                _currentDuration = Mathf.Clamp(_currentDuration / _speed, 0f, _baseDuration);
+                _currentDuration = Mathf.Clamp(_currentDuration - (_currentDuration / _speed), 0f, _baseDuration);
 
                 OnTickCallback?.Invoke();
             }

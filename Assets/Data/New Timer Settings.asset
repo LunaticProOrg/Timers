@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: New Timer Settings
   m_EditorClassIdentifier: 
   <DefaultTimerInSeconds>k__BackingField: 5
-  <IncrementalDuration>k__BackingField: 0.5
-  <IncrementalSpeed>k__BackingField: 0.01
+  <IncrementalDuration>k__BackingField: 1
+  <IncrementalSpeed>k__BackingField: 3
   <TimerSecondsChangesValue>k__BackingField: 5
