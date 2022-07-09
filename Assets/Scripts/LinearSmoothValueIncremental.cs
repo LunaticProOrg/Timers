@@ -49,7 +49,7 @@ namespace Lunatic.Timer
             else
             {
                 _elapsed = 0f;
-                _currentDuration = Mathf.Clamp(_currentDuration - (_currentDuration / _speed), 0f, _baseDuration);
+                _currentDuration = Mathf.Clamp(_currentDuration / _speed, 0f, _baseDuration);
 
                 OnTickCallback?.Invoke();
             }

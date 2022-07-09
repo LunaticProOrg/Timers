@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db403ff49e412094ca8213e21a7c30b9, type: 3}
   m_Name: New Timer Settings
   m_EditorClassIdentifier: 
-  <DefaultTimerInSeconds>k__BackingField: 5
-  <IncrementalDuration>k__BackingField: 1
-  <IncrementalSpeed>k__BackingField: 3
-  <TimerSecondsChangesValue>k__BackingField: 5
+  <DefaultTimerInSeconds>k__BackingField: 60
+  <IncrementalDuration>k__BackingField: 0.5
+  <IncrementalSpeed>k__BackingField: 1.05
+  <TimerSecondsChangesValue>k__BackingField: 60
